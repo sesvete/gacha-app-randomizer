@@ -1,0 +1,62 @@
+import random
+
+pity = 0
+guaranteed = False
+
+class PulledUnit:
+    def __init__(self, date, from_banner, num_of_pulls, unit_name):
+        self.date = date
+        self.from_banner = from_banner
+        self.num_of_pulls = num_of_pulls
+        self.unit_name = unit_name
+
+
+
+# https://github.com/sesvete/python_code_laptop_2022-2024/blob/main/genshin_impact_wishing/wishing_simulator.py
+
+# to si malo poglej pa pogruntaj zdaj se mi res ne da
+
+# POTEK FUNKCIJE
+# 1) izbral bom mode SQL, NoSQL - SQL bo direk pisala v bazo, NoSQL bo naredila JSON
+# 2) izbral bom koliko bo uporabnikov
+# 3) Izbral bom koliko pullov se bo naredilo za vsak banner
+# 4) funkcija se izvede
+
+# na primer da imamo genshin limited banner
+# mora se pobrati koliko je soft pity, koliko je rate za fivestar pull, kolikšen je rate za FromBanner win
+# gleda se tudi, če je standard ali limited banner - pri standar bannerju ne gledamo
+# guaranteed vedno štarta s False in pull count z 0
+# za weapon banner je soft pity 65 win rate pa 0,75
+
+# torej delal se bo loop
+# na primer če imamo 50 uporabnikov in 50 pullov
+# prvi uporabnik gre na genshin impact limited banner
+# vnesejo se spremenljive, izvede se in vpiše se v dictionary
+# iterira se za vsak banner za vsako igro in za vsakega uporabnika
+
+# ta je funkcija, ki se izvede, ko dejankso dobim 5 star in izračunamo, če smo zmagal 50/50
+def pull_limited_five_star(guaranteed, is_weapon_banner):
+    if guaranteed == False:
+        win = random.random()
+        if is_weapon_banner:
+            pull_rate = 0.75
+        else:
+            pull_rate = 0.5
+        if win < pull_rate:
+            unit_name = "FROM BANNER"
+            guaranteed = False
+        else:
+            unit_name = "STANDARD UNIT"
+            guaranteed = True
+    else:
+        unit_name = "FROM BANNER"
+        guaranteed = False
+    return guaranteed, unit_name
+
+#single pull without pity
+def single_pull():
+    pull = random.random()
+
+#single pull soft pity (32,4%)
+
+
