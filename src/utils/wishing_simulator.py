@@ -70,11 +70,35 @@ def pull_limited_five_star(guaranteed, is_weapon_banner):
         from_banner = True
     return guaranteed, unit_name, from_banner
 
+"""
+def full_odds(pull, num_of_pulls, guaranteed, is_weapon_banner):
+    if pull < 0.006:
+        guaranteed, unit_name, from_banner = pull_limited_five_star(guaranteed, is_weapon_banner)
+        pulled_unit = PulledUnit(datetime.now(), guaranteed, num_of_pulls, unit_name)
+        pulls.append(pulled_unit)
+        keep_pulling = False
+    else:
+        keep_pulling = True
+    return guaranteed, keep_pulling
+"""
+
+
+
 #single pull without pity
 def single_pull(num_of_pulls, guaranteed, is_weapon_banner):
     num_of_pulls += 1
     pull = random.random()
-    if pull < 0.006:
+    # if pull < 74 full odds
+    # if pull 74 < x < 90 - 32,4%
+    # if pull = 90 guarantee
+    if num_of_pulls < 75:
+        rate = 0.006
+    elif 74 < num_of_pulls < 90:
+        rate = 0.324
+    else:
+        rate = 1
+
+    if pull < rate:
         guaranteed, unit_name, from_banner = pull_limited_five_star(guaranteed, is_weapon_banner)
         #tle se mora še izpisat enota
         pulled_unit = PulledUnit(datetime.now(), guaranteed, num_of_pulls, unit_name)
@@ -84,13 +108,14 @@ def single_pull(num_of_pulls, guaranteed, is_weapon_banner):
         keep_pulling = True
     return num_of_pulls, guaranteed, keep_pulling
 
+
 #single pull soft pity (32,4%)
 # hočem pullad dokler ne dobim 5 star
-for amount in range(50):
+for amount in range(100):
     num_of_pulls = 0
     keep_pulling = True
     while keep_pulling:
-        num_of_pulls, guaranteed, keep_pulling= single_pull(num_of_pulls, False, False)
+        num_of_pulls, guaranteed, keep_pulling = single_pull(num_of_pulls, False, False)
 
 
 print(pulls)
