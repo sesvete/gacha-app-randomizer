@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 
 pulls = []
-
+counter = 0
 class PulledUnit:
     def __init__(self, date, from_banner, num_of_pulls, unit_name):
         self.date = date
@@ -50,7 +50,7 @@ class PulledUnit:
 
 # ta je funkcija, ki se izvede, ko dejankso dobim 5 star in izračunamo, če smo zmagal 50/50
 def pull_limited_five_star(guaranteed, is_weapon_banner):
-    if guaranteed == False:
+    if not guaranteed:
         win = random.random()
         if is_weapon_banner:
             pull_rate = 0.75
@@ -82,8 +82,6 @@ def full_odds(pull, num_of_pulls, guaranteed, is_weapon_banner):
     return guaranteed, keep_pulling
 """
 
-
-
 #single pull without pity
 def single_pull(num_of_pulls, guaranteed, is_weapon_banner):
     num_of_pulls += 1
@@ -91,6 +89,7 @@ def single_pull(num_of_pulls, guaranteed, is_weapon_banner):
     # if pull < 74 full odds
     # if pull 74 < x < 90 - 32,4%
     # if pull = 90 guarantee
+    #TODO: prilagodi še za weapon banner/bangboo banner
     if num_of_pulls < 75:
         rate = 0.006
     elif 74 < num_of_pulls < 90:
@@ -101,29 +100,29 @@ def single_pull(num_of_pulls, guaranteed, is_weapon_banner):
     if pull < rate:
         guaranteed, unit_name, from_banner = pull_limited_five_star(guaranteed, is_weapon_banner)
         #tle se mora še izpisat enota
-        pulled_unit = PulledUnit(datetime.now(), guaranteed, num_of_pulls, unit_name)
+        pulled_unit = PulledUnit(datetime.now(), from_banner, num_of_pulls, unit_name)
         pulls.append(pulled_unit)
         keep_pulling = False
     else:
         keep_pulling = True
     return num_of_pulls, guaranteed, keep_pulling
 
-
 #single pull soft pity (32,4%)
 # hočem pullad dokler ne dobim 5 star
+guaranteed = False
 for amount in range(100):
     num_of_pulls = 0
     keep_pulling = True
     while keep_pulling:
-        num_of_pulls, guaranteed, keep_pulling = single_pull(num_of_pulls, False, False)
+        num_of_pulls, guaranteed, keep_pulling = single_pull(num_of_pulls, guaranteed, False)
 
 
 print(pulls)
-
 for unit in pulls:
     print(unit.num_of_pulls)
 
+print("")
+for unit in pulls:
+    print(unit.unit_name)
 
-#TODO: soft pity (from 75 onward the probability should be around 35 %)
-#TODO: guaranteed on 90th pull
 #TODO: implement 50/50 guaranteed win
